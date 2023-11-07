@@ -1,0 +1,16 @@
+deplacer les choix de player_role dans edit et faire que ca soit les officier qui assigne les roles
+
+
+faire en sorte que l'officier (Front/Logi) create a front or logi hub and soldat can choice this front.
+create preset d item selectionen (example : 1er preset = 15 creates Bmats / 2e preset = 15 creates soldier supplies / 3e preset = starter pack / 4e preset= arti /
+5e preset = anti-tank) and give officier possibility to create a preset
+Separate preset in three category 1 = basic basic (shirt bmat) 2 = Premade preset 3 = Precisely command
+Faire 3 boutons principaux
+
+
+Rapide et intuitif pour le soldat
+
+
+cote officier logi, voir les demandes indique si traite, en cours ou pas
+
+faire un HUB logi comme au MCDO qui voit tous les front qui ont fait une demande et les offi logi peuvent indiquer l etat de ces demandes

@@ -1,0 +1,34 @@
+{% extends "base.html" %} {% block title %} Changed {% endblock %}
+
+{% block content %}
+
+<div class="container">
+	<!-- Display username and actual role and create form to change only the role -->
+	<h1>Change role</h1>
+	<form method="POST">
+		<div class="form-group">
+			<label for="username">Username</label>
+			<input type="text" class="form-control" id="username"
+				name="username" value= {{ user.username }} readonly>
+		</div>
+		<div class="form-group">
+			<label for="role">Role</label> <select class="form-control"
+				id="role" name="role">
+				<option value="Inconnu" {% if user.role == 'Inconnu' %} selected {% endif %}>Inconnu</option> <!-- height of role = 0 -->
+				<option value="Soldier" {% if user.role == 'Soldier' %} selected {% endif %}>Soldier</option> <!-- height of role = 1 -->
+				<option value="Trusted Soldier" {% if user.role == 'Trusted Soldier' %} selected {% endif %}>Trusted Soldier</option> <!-- height of role = 2 -->
+				<option value="Trusted Logi" {% if user.role == 'Trusted Logi' %} selected {% endif %}>Trusted Logi</option> <!-- height of role = 2 -->
+				<option value="Officier Front" {% if user.role == 'Officier Front' %} selected {% endif %}>Officier Front</option> <!-- height of role = 3 -->
+				<option value="'Officier Logi" {% if user.role == 'Officier Logi' %} selected {% endif %}>Officier Logi</option> <!-- height of role = 3 -->
+				<option value="Head Front" {% if user.role == 'Head Front' %} selected {% endif %}>Head Front</option> <!-- height of role = 4 -->
+				<option value="Head Logi" {% if user.role == 'Head Logi' %} selected {% endif %}>Head Logi</option> <!-- height of role = 4 -->
+				<option value="Coordinator" {% if user.role == 'Coordinator' %} selected {% endif %}>Coordinator</option> <!-- height of role = 5 -->
+				<option value="Leader" {% if user.role == 'Leader' %} selected {% endif %}>Leader</option> <!-- height of role = 6 -->
+				<option value="Admin" {% if user.role == 'Admin' %} selected {% endif %}>Admin</option> <!-- height of role = 20 -->
+			</select>
+		</div>
+		<button type="submit" class="btn btn-primary">Submit</button>
+	</form>
+</div>
+
+{% endblock %}

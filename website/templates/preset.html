@@ -1,0 +1,69 @@
+{% extends "base.html" %} {% block title %} Changed {% endblock %}
+
+{% block content %}
+
+<h1>Create Preset</h1>
+<form method="POST">
+	<div class="form-group">
+		<label for="name">Create New Preset</label>
+		<input type="text" name="name" value="{{ name }}" class="form-control" id="name" placeholder="Name of preset">
+		</div>
+	<div class="form-group">
+		<label for="name">Add item</label>
+		<select name="category_id" class="form-control" id="category" onchange="changeCategory()">
+			<option selected disabled value="0">Choose a category</option>
+		</select>
+		<select name="item" class="form-control" id="item">
+		</select>
+		<input class="form-control" id="quantity" type="number" min="1" name="quantity" value="{{ quantity }}" placeholder="Quantity">
+		<button type="submit" class="btn btn-primary">Submit</button>
+	</div>
+</form>
+<button type="text"  onclick="addItem()" class="btn btn-primary">Add Item</button>
+<script>
+
+	let list_item = []
+	function addItem(){
+		let item = document.getElementById("item").value;
+		let quantity = document.getElementById("quantity").value * 1;
+		let added = false
+		for (let index = 0; index < list_item.length; index++) {
+			const element = list_item[index];
+			if (element.item == item){
+				added = true;
+				element.quantity = parseInt(element.quantity) + quantity
+				break
+			}
+		}
+		if (!added)
+			list_item.push({"item":item, "quantity":quantity})
+		console.log(list_item) // temporary to see item list in log
+		document.getElementById("category").value = 0
+		document.getElementById("item").innerHTML = ""
+		document.getElementById("quantity").value = "";
+	}
+
+	//todo make display list and add button to remove and change quantity
+
+	function changeCategory() {
+		let categ = document.getElementById("category").value;
+		dom_items.innerHTML = ""
+		items_json.items.forEach(element => {
+			if (element.category == categ)
+				dom_items.innerHTML += `<option id=${element.id}>${element.name}</option>`
+		});
+	}
+	let actCategory = 0;
+	let dom_categ = document.getElementById("category")
+	dom_categ.innerHTML += '{% for category in categories %}	<option value="{{ category.id }}" id="category_{{ category.id }}">{{ category.name }}</option>	{% endfor %}'
+	let items = "{{items}}"
+	let dom_items = document.getElementById("item")
+	let items_str = `{"items": [{% for item in items %}{"name":"{{ item.name }}", "category":"{{ item.category_id }}", "id":"{{item.id}}"},{% endfor %}`.slice(0, -1) + "]}"
+	let items_json = JSON.parse(items_str)
+
+
+</script>
+
+
+{% endblock %}
+
