@@ -23,6 +23,7 @@
 				<thead>
 					<tr>
 						<th>Name</th>
+						<th>ID</th>
 						<th>Category</th>
 						<th>Category Name</th>
 					</tr>
@@ -31,6 +32,7 @@
 					{% for item in items %}
 					<tr>
 						<td>{{ item.name }}</td>
+						<td>{{ item.id }}</td>
 						<td>{{ item.category_id }}</td>
 						<td>{{ category_list[item.category_id-1].name }}</td>
 					</tr>

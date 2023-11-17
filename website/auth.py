@@ -1,5 +1,5 @@
 from flask import Blueprint, render_template, request, flash, redirect, url_for
-from .models import User
+from .models import Users
 from werkzeug.security import generate_password_hash, check_password_hash
 from . import db
 from flask_login import login_user, login_required, logout_user, current_user
@@ -12,7 +12,7 @@ def login():
 		username = request.form.get('username')
 		password = request.form.get('password')
 
-		user = User.query.filter_by(username=username).first()
+		user = Users.query.filter_by(username=username).first()
 		if user:
 			if check_password_hash(user.password, password):
 				flash('Logged in successfully!', category='success')
@@ -37,7 +37,7 @@ def sign_up():
 		password = request.form.get('password')
 		confirm_password = request.form.get('confirm_password')
 
-		user = User.query.filter_by(username=username).first()
+		user = Users.query.filter_by(username=username).first()
 		if user:
 			flash('Username already exists.', category='error')
 		elif len(username) < 2:
@@ -46,9 +46,8 @@ def sign_up():
 			flash('Password must be at least 7 characters with minimum 1 number, 1 Uppercase letter', category='error')
 		elif password != confirm_password:
 			flash('Passwords do not match.', category='error')
-			pass
 		else:
-			new_user = User(username=username, password=generate_password_hash(password, method='pbkdf2:sha256', salt_length=8))
+			new_user = Users(username=username, password=generate_password_hash(password, method='pbkdf2:sha256', salt_length=64))
 			db.session.add(new_user)
 			db.session.commit()
 			login_user(new_user, remember=True)

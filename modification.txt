@@ -14,3 +14,29 @@ Rapide et intuitif pour le soldat
 cote officier logi, voir les demandes indique si traite, en cours ou pas
 
 faire un HUB logi comme au MCDO qui voit tous les front qui ont fait une demande et les offi logi peuvent indiquer l etat de ces demandes
+
+
+
+
+
+
+
+
+Page d acceuil pour le role soldat -> front
+un officier front peut creer plusieurs front check si il peut acceder a plusieurs front
+
+leader = 100
+
+faire une colone avec les pages dispo et dans la nav bar pour faire un choix plus tard
+
+faire en sorte que les preset ne soit pas dans un menu deroulant
+
+
+sur le front ajouter la date de debut - la date actuel pour avoir le temps + nombre de personne inscrite sur ce front (si delete remove this front a tous les users)
++ created by (officier front) and supplied by (offcier logi)
+
+faire en sorte que l officer front ne supplied pas lui meme son front
+
+
+
+voir pour faire un truc special Arti.. -> Only preset Arti plus specialise (demande de renfort, de build etc)

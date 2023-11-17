@@ -1,0 +1,46 @@
+{% extends "base.html" %} {% block title %} KGG APP {% endblock %}
+{% block content %}
+
+<h1>Logi hub </h1>
+
+<!-- Card div -->
+<div class="row">
+	{% if orders %}
+		{% for order in orders %}
+		<div class="col-md-4">
+			<div class="card mt-4">
+				<div class="card-header">
+					<h5 class="card-title">{{ fronts[order.front-1].name }}</h5>
+				</div>
+				<div class="card-body">
+					{% if presets[order.preset_id-1] %}
+						<!-- check if presets are empty -->
+						<h6 class="card-subtitle mb-2 text-muted">{{ presets[order.preset_id-1].name }}</h6>
+						{% for item in presets[order.preset_id-1].item_list["item_list"] %}
+							{% for database_item in items %}
+								{% if database_item.id == item["item_id"] %}
+									<p class="card-text">Item: {{ database_item.name }} | Quantity: {{ item["quantity"] }}</p>
+								{% endif %}
+							{% endfor %}
+						{% endfor %}
+					{% else %}
+						<p class="card-text">Presets not available.</p>
+					{% endif %}
+					<h6 class="card-subtitle mb-2 text-muted">Order by: {{ users[order.created_by-2].username }}</h6>
+					<h6 class="card-subtitle mb-2 text-muted">Status: {{ order.status }}</h6>
+				</div>
+				<button type="button" class="btn btn-primary">In progress</button> <!-- change status to in progress -->
+				<button type="button" class="btn btn-success">Done</button> <!-- change status to done -->
+			</div>
+		</div>
+		{% endfor %}
+	{% else %}
+		<div class="col-md-12 mt-4">
+			<div class="alert alert-info" role="alert">
+				No orders available.
+			</div>
+		</div>
+	{% endif %}
+</div>
+
+{% endblock %}

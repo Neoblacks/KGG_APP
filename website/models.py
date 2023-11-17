@@ -3,42 +3,44 @@ from flask_login import UserMixin
 from sqlalchemy.sql import func
 
 
-class Role(db.Model):
+class Roles(db.Model):
 	id = db.Column(db.Integer, primary_key=True)
-	name = db.Column(db.String(10), unique=True)
+	name = db.Column(db.String(150), unique=True)
 	height = db.Column(db.Integer)
 
-class User(db.Model, UserMixin):
+class Users(db.Model, UserMixin):
 	id = db.Column(db.Integer, primary_key=True)
 	username = db.Column(db.String(150), unique=True)
 	password = db.Column(db.String(150))
-	role = db.Column(db.String(10), default='inconnu')
-	player_role = db.Column(db.String(10))
-	region = db.Column(db.String(150))
-	sub_region = db.Column(db.String(150))
+	role_id = db.Column(db.Integer, db.ForeignKey('roles.id'), default=11)
+	front = db.Column(db.Integer, db.ForeignKey('fronts.id'))
 
 
-class Category(db.Model):
+class Categories(db.Model):
 	id = db.Column(db.Integer, primary_key=True)
 	name = db.Column(db.String(150), unique=True) # Weapon, Heavy Weapon, Ammu heavy, Equipment, Medical, Materials, Jacket, Vehicles, Structures
 
-class Item(db.Model):
+class Items(db.Model):
 	id = db.Column(db.Integer, primary_key=True)
 	name = db.Column(db.String(150), unique=True)
-	category_id = db.Column(db.Integer, db.ForeignKey('category.id'))
+	category_id = db.Column(db.Integer, db.ForeignKey('categories.id'))
 
 class Preset(db.Model):
 	id = db.Column(db.Integer, primary_key=True)
 	name = db.Column(db.String(150))
-	item_list_id = db.Column(db.Integer, db.ForeignKey('presetItem.id'))
+	item_list = db.Column(db.JSON)
 
-class PresetItem(db.Model):
-	id	= db.Column(db.Integer, primary_key=True)
-	item_id = db.Column(db.Integer, db.ForeignKey('item.id'))
-	quantity = db.Column(db.Integer)
-
+class	Order(db.Model):
+	id = db.Column(db.Integer, primary_key=True)
+	front = db.Column(db.Integer, db.ForeignKey('fronts.id'))
+	preset_id = db.Column(db.Integer, db.ForeignKey('preset.id'))
+	status = db.Column(db.String(150))
+	created_by = db.Column(db.Integer, db.ForeignKey('users.id'))
+	created_at = db.Column(db.DateTime(timezone=True), default=func.now())
 
 class Fronts(db.Model):
 	id = db.Column(db.Integer, primary_key=True)
-	name_of_front = db.Column(db.String(150))
+	name = db.Column(db.String(150))
 	region = db.Column(db.String(150))
+	create_by = db.Column(db.Integer, db.ForeignKey('users.id'))
+	# created_at = db.Column(db.DateTime(timezone=True), default=func.now())

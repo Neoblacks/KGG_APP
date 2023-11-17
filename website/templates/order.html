@@ -1,0 +1,27 @@
+{% extends "base.html" %} {% block title %} KGG APP {% endblock %}
+{% block content %}
+
+<h1>List preset</h1>
+
+
+{% for preset in presets %}
+<div class="card mt-4">
+	<div class="card-header">
+		{{ preset.name }}
+	</div>
+	<div class="card-body">
+		<ul class="list-group">
+			{% for item in preset.item_list["item_list"] %}
+				{% for database_item in items %}
+					{% if database_item.id == item["item_id"] %}
+						<li class="list-group-item">
+							Item: {{ database_item.name }} | Quantity: {{ item["quantity"] }}
+						</li>
+					{% endif %}
+				{% endfor %}
+			{% endfor %}
+		</ul>
+	</div>
+</div>
+{% endfor %}
+{% endblock %}

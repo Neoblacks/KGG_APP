@@ -1,13 +1,9 @@
-{% extends "base.html" %} {% block title %} Changed {% endblock %}
+{% extends "base.html" %} {% block title %} KGG-APP Preset {% endblock %}
 
 {% block content %}
 
 <h1>Create Preset</h1>
-<form method="POST">
-	<div class="form-group">
-		<label for="name">Create New Preset</label>
-		<input type="text" name="name" value="{{ name }}" class="form-control" id="name" placeholder="Name of preset">
-		</div>
+<form id="form_additem" onsubmit="addItem()">
 	<div class="form-group">
 		<label for="name">Add item</label>
 		<select name="category_id" class="form-control" id="category" onchange="changeCategory()">
@@ -16,15 +12,38 @@
 		<select name="item" class="form-control" id="item">
 		</select>
 		<input class="form-control" id="quantity" type="number" min="1" name="quantity" value="{{ quantity }}" placeholder="Quantity">
-		<button type="submit" class="btn btn-primary">Submit</button>
 	</div>
+	<button type="text" class="btn btn-primary" onclick="enabledSubmit()" disabled>Add Item</button>
 </form>
-<button type="text"  onclick="addItem()" class="btn btn-primary">Add Item</button>
-<script>
 
+<form id="form_preset" onsubmit="console.log('coucou')" method="post" action="/preset">
+	<div class="form-group">
+		<label for="name">Create New Preset</label>
+		<input type="text" name="name" required="required" class="form-control" id="name" placeholder="Name of preset">
+		</div>
+<table class="table">
+	<thead>
+	<tr>
+		<th>Item</th>
+		<th>Quantity</th>
+		<th>Action</th>
+	</tr>
+	</thead>
+	<tbody id="itemList"></tbody>
+</table>
+<button type="submit" class="btn btn-primary" disabled>Submit</button>
+</form>
+
+
+<script>
+	document.getElementById("form_additem").addEventListener('submit', (e)=>{e.preventDefault();})//prevent reloading when submit from_additem
+	//document.getElementById("form_preset").addEventListener('submit', (e)=>{e.preventDefault();})//prevent reloading when submit from_preset
 	let list_item = []
+
 	function addItem(){
 		let item = document.getElementById("item").value;
+		console.log(item)
+		if (item != ""){
 		let quantity = document.getElementById("quantity").value * 1;
 		let added = false
 		for (let index = 0; index < list_item.length; index++) {
@@ -36,24 +55,63 @@
 			}
 		}
 		if (!added)
-			list_item.push({"item":item, "quantity":quantity})
-		console.log(list_item) // temporary to see item list in log
+		{
+			dom_elem = document.getElementById(item)
+			item_id = -1
+			if (dom_elem != null)
+				item_id = dom_elem.getAttribute("item_id")
+			list_item.push({"item":item, "quantity":quantity, "id":item_id})
+		}
+		displayItemList()
 		document.getElementById("category").value = 0
 		document.getElementById("item").innerHTML = ""
 		document.getElementById("quantity").value = "";
+		}
 	}
 
-	//todo make display list and add button to remove and change quantity
+	function displayItemList() {
+		let itemList = document.getElementById("itemList");
+		itemList.innerHTML = "";
 
-	function changeCategory() {
-		let categ = document.getElementById("category").value;
-		dom_items.innerHTML = ""
-		items_json.items.forEach(element => {
-			if (element.category == categ)
-				dom_items.innerHTML += `<option id=${element.id}>${element.name}</option>`
-		});
+		for (let index = 0; index < list_item.length; index++) {
+			const element = list_item[index];
+			const row = itemList.insertRow();
+			const cell1 = row.insertCell(0);
+			const cell2 = row.insertCell(1);
+			const cell3 = row.insertCell(2);
+
+			cell1.innerHTML = element.item;
+			cell2.innerHTML = `<input name="item${index}" type="hidden" value=${list_item[index].id}> <input name="quantity${index}" type="number" onchange="list_item[${index}].quantity = 1 * this.value" value="${element.quantity}" min="1">`;
+			cell3.innerHTML = `<button type="button" onclick="removeItem(${index})">Remove</button>`;
+		}
 	}
-	let actCategory = 0;
+
+function removeItem(index) {
+	list_item.splice(index, 1);
+	displayItemList();
+}
+
+function enabledSubmit() {
+	//Change the hidden attribute of the submit button
+	let submit = document.querySelector("button[type='submit']");
+	submit.disabled = false;
+}
+
+function changeCategory() {
+	let categ = document.getElementById("category").value;
+	let add_item = document.querySelector("button[type='text']");
+	if (categ != 0)
+		add_item.disabled = false;
+	else
+		add_item.disabled = true;
+	dom_items.innerHTML = ""
+	items_json.items.forEach(element => {
+		if (element.category == categ)
+			dom_items.innerHTML += `<option item_id=${element.id} value="${element.name}" id="${element.name}">${element.name}</option>` //change to input datalist with autocomplete
+	});
+}
+
+let actCategory = 0;
 	let dom_categ = document.getElementById("category")
 	dom_categ.innerHTML += '{% for category in categories %}	<option value="{{ category.id }}" id="category_{{ category.id }}">{{ category.name }}</option>	{% endfor %}'
 	let items = "{{items}}"
@@ -61,9 +119,7 @@
 	let items_str = `{"items": [{% for item in items %}{"name":"{{ item.name }}", "category":"{{ item.category_id }}", "id":"{{item.id}}"},{% endfor %}`.slice(0, -1) + "]}"
 	let items_json = JSON.parse(items_str)
 
-
 </script>
 
 
 {% endblock %}
-
