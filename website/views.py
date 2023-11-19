@@ -158,6 +158,44 @@ def fronts():
 	return render_template("fronts.html", current_user=current_user, fronts=fronts)
 
 
+@views.route('/fronts/<int:id>/join', methods=['GET', 'POST'])
+@login_required
+def join_front(id):
+	front = Fronts.query.get_or_404(id)
+	if current_user.front == front.id:
+		flash('You are already in this front.', category='error')
+		return redirect(url_for('views.fronts'))
+	if request.method == 'POST':
+		try:
+			current_user.front = front.id
+			db.session.commit()
+			flash('You joined the front!', category='success')
+			return redirect(url_for('views.fronts'))
+		except Exception as e:
+			flash(f'Error join front: {str(e)}', category='error')
+			return redirect(url_for('views.fronts'))
+	return render_template("join_front.html", current_user=current_user, front=front)
+
+
+@views.route('/fronts/<int:id>/leave', methods=['GET', 'POST'])
+@login_required
+def leave_front(id):
+	front = Fronts.query.get_or_404(id)
+	if current_user.front != front.id:
+		flash('You are not in this front.', category='error')
+		return redirect(url_for('views.fronts'))
+	if request.method == 'POST':
+		try:
+			current_user.front = None
+			print(current_user.front)
+			db.session.commit()
+			flash('You left the front!', category='success')
+			return redirect(url_for('views.fronts'))
+		except Exception as e:
+			flash(f'Error leave front: {str(e)}', category='error')
+			return redirect(url_for('views.fronts'))
+	return render_template("leave_front.html", current_user=current_user, front=front)
+
 @views.route('/fronts/<int:id>/', methods=['GET', 'POST'])
 @login_required
 def order_front(id):

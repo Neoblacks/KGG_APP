@@ -15,7 +15,6 @@ class Users(db.Model, UserMixin):
 	role_id = db.Column(db.Integer, db.ForeignKey('roles.id'), default=11)
 	front = db.Column(db.Integer, db.ForeignKey('fronts.id'))
 
-
 class Categories(db.Model):
 	id = db.Column(db.Integer, primary_key=True)
 	name = db.Column(db.String(150), unique=True) # Weapon, Heavy Weapon, Ammu heavy, Equipment, Medical, Materials, Jacket, Vehicles, Structures
@@ -44,3 +43,4 @@ class Fronts(db.Model):
 	region = db.Column(db.String(150))
 	create_by = db.Column(db.Integer, db.ForeignKey('users.id'))
 	# created_at = db.Column(db.DateTime(timezone=True), default=func.now())
+	# status = db.Column(db.Boolean, default=True)
